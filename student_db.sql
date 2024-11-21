@@ -81,3 +81,50 @@ VALUES
     (1, 1, 1, 8, 1),
     (2, 1, 2, 10, 2),
     (3, 2, 1, 12, 1);
+
+
+
+select SubID, SubName, Max(Credit) as 'Highest credit'
+from Subject
+group by SubID
+HAVING Max(Credit) >= ALL (SELECT
+                               Max(Credit)
+                           FROM
+                               Subject
+                           GROUP BY Credit);
+
+select s.SubName, Max(m.Mark) as 'Diem thi lon nhat'
+from Subject s
+         join Mark m
+              on s.SubID = m.SubID
+group by m.SubID
+having Max(m.Mark) >= All(
+    select Max(m.Mark)
+    from Mark m group by m.Mark);
+
+select s.StudentID, s.StudentName, avg(m.Mark) as 'Diem trung binh'
+from Student s
+         join Mark m
+              on s.StudentID = m.StudentId
+group by s.StudentId
+order by avg(m.Mark) desc;
+
+# Sử dụng Having và All để tìm học viên có điểm trung bình lớn nhất
+
+
+SELECT S.StudentId, S.StudentName, AVG(Mark)
+FROM Student S join Mark M on S.StudentId = M.StudentId
+GROUP BY S.StudentId, S.StudentName
+HAVING AVG(Mark) >= ALL (SELECT AVG(Mark) FROM Mark GROUP BY Mark.StudentId);
+
+#xét điều kiện điểm trung bình các môn học phải lớn hơn 15
+
+
+SELECT S.StudentId,S.StudentName, AVG(Mark)
+FROM Student S join Mark M on S.StudentId = M.StudentId
+GROUP BY S.StudentId, S.StudentName
+HAVING AVG(Mark) > 15;
+
+
+
+
